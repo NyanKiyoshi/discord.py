@@ -1679,7 +1679,7 @@ class Client:
         yield from self.ws.send_as_json(payload)
 
     @asyncio.coroutine
-    def kick(self, member):
+    def kick(self, member, reason=''):
         """|coro|
 
         Kicks a :class:`Member` from the server they belong to.
@@ -1694,6 +1694,8 @@ class Client:
         -----------
         member : :class:`Member`
             The member to kick from their server.
+        reason : str
+            The reason behind the kick that will be written in the audit logs.
 
         Raises
         -------
@@ -1702,10 +1704,10 @@ class Client:
         HTTPException
             Kicking failed.
         """
-        yield from self.http.kick(member.id, member.server.id)
+        yield from self.http.kick(member.id, member.server.id, reason)
 
     @asyncio.coroutine
-    def ban(self, member, delete_message_days=1):
+    def ban(self, member, delete_message_days=1, reason=''):
         """|coro|
 
         Bans a :class:`Member` from the server they belong to.
@@ -1723,6 +1725,8 @@ class Client:
         delete_message_days : int
             The number of days worth of messages to delete from the user
             in the server. The minimum is 0 and the maximum is 7.
+        reason : str
+            The reason behind the ban that will be written in the audit logs.
 
         Raises
         -------
@@ -1731,10 +1735,10 @@ class Client:
         HTTPException
             Banning failed.
         """
-        yield from self.http.ban(member.id, member.server.id, delete_message_days)
+        yield from self.http.ban(member.id, member.server.id, delete_message_days, reason)
 
     @asyncio.coroutine
-    def unban(self, server, user):
+    def unban(self, server, user, reason=''):
         """|coro|
 
         Unbans a :class:`User` from the server they are banned from.
@@ -1745,6 +1749,8 @@ class Client:
             The server to unban the user from.
         user : :class:`User`
             The user to unban.
+        reason : str
+            The reason behind the unbanning, it will be written in the audit logs.
 
         Raises
         -------
@@ -1753,7 +1759,7 @@ class Client:
         HTTPException
             Unbanning failed.
         """
-        yield from self.http.unban(user.id, server.id)
+        yield from self.http.unban(user.id, server.id, reason)
 
     @asyncio.coroutine
     def server_voice_state(self, member, *, mute=None, deafen=None):

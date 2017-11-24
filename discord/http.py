@@ -393,20 +393,27 @@ class HTTPClient:
 
     # Member management
 
-    def kick(self, user_id, guild_id):
+    def kick(self, user_id, guild_id, reason=''):
         r = Route('DELETE', '/guilds/{guild_id}/members/{user_id}', guild_id=guild_id, user_id=user_id)
-        return self.request(r)
-
-    def ban(self, user_id, guild_id, delete_message_days=1):
-        r = Route('PUT', '/guilds/{guild_id}/bans/{user_id}', guild_id=guild_id, user_id=user_id)
         params = {
-            'delete-message-days': delete_message_days
+            'reason': reason
         }
         return self.request(r, params=params)
 
-    def unban(self, user_id, guild_id):
+    def ban(self, user_id, guild_id, delete_message_days=1, reason=''):
+        r = Route('PUT', '/guilds/{guild_id}/bans/{user_id}', guild_id=guild_id, user_id=user_id)
+        params = {
+            'delete-message-days': delete_message_days,
+            'reason': reason
+        }
+        return self.request(r, params=params)
+
+    def unban(self, user_id, guild_id, reason=''):
         r = Route('DELETE', '/guilds/{guild_id}/bans/{user_id}', guild_id=guild_id, user_id=user_id)
-        return self.request(r)
+        params = {
+            'reason': reason
+        }
+        return self.request(r, params=params)
 
     def server_voice_state(self, user_id, guild_id, *, mute=None, deafen=None):
         r = Route('PATCH', '/guilds/{guild_id}/members/{user_id}', guild_id=guild_id, user_id=user_id)
