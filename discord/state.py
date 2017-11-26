@@ -261,8 +261,16 @@ class ConnectionState:
 
     def parse_message_reaction_add(self, data):
         message = self._get_message(data['message_id'])
+
+        # separate the emoji information from the data
+        # since Reaction requires a discord.Emoji object.
+        #
+        # Store the removed raw emoji in a variable to allow us
+        # to send it to `on_raw_reaction_add(**data)`
+        raw_emoji=data.pop('emoji')
+
         if message is not None:
-            emoji = self._get_reaction_emoji(**data.pop('emoji'))
+            emoji = self._get_reaction_emoji(**raw_emoji)
             reaction = utils.get(message.reactions, emoji=emoji)
 
             is_me = data['user_id'] == self.user.id
@@ -280,6 +288,10 @@ class ConnectionState:
             member = self._get_member(channel, data['user_id'])
 
             self.dispatch('reaction_add', reaction, member)
+
+        # dispatch a `raw_reaction_add` event with the raw data,
+        # even if the message wasn't in cache
+        self.dispatch('raw_reaction_add', emoji=raw_emoji, **data)
 
     def parse_message_reaction_remove_all(self, data):
         message =  self._get_message(data['message_id'])
