@@ -2006,7 +2006,7 @@ class Client:
             Editing the channel failed.
         """
 
-        keys = ('name', 'topic', 'position')
+        keys = ('name', 'topic', 'position', 'parent_id')
         for key in keys:
             if key not in options:
                 options[key] = getattr(channel, key)
