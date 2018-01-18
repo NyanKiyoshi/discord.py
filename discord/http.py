@@ -461,7 +461,7 @@ class HTTPClient:
     # Channel management
 
     def edit_channel(self, channel_id, **options):
-        valid_keys = ('name', 'topic', 'bitrate', 'user_limit', 'position')
+        valid_keys = ('name', 'topic', 'bitrate', 'user_limit', 'position', 'parent_id')
         payload = {
             k: v for k, v in options.items() if k in valid_keys
         }
@@ -472,11 +472,14 @@ class HTTPClient:
         r = Route('PATCH', '/guilds/{guild_id}/channels', guild_id=guild_id)
         return self.request(r, json=positions)
 
-    def create_channel(self, guild_id, name, channe_type, permission_overwrites=None):
+    def create_channel(self, guild_id, name, channe_type, permission_overwrites=None, parent_id=None):
         payload = {
             'name': name,
-            'type': channe_type
+            'type': channe_type,
         }
+
+        if parent_id is not None:
+            payload["parent_id"] = parent_id
 
         if permission_overwrites is not None:
             payload['permission_overwrites'] = permission_overwrites

@@ -2068,7 +2068,7 @@ class Client:
         yield from self.http.move_channel_position(channel.server.id, payload)
 
     @asyncio.coroutine
-    def create_channel(self, server, name, *overwrites, type=None):
+    def create_channel(self, server, name, *overwrites, type=None, parent_id=None):
         """|coro|
 
         Creates a :class:`Channel` in the specified :class:`Server`.
@@ -2165,7 +2165,8 @@ class Client:
 
             perms.append(payload)
 
-        data = yield from self.http.create_channel(server.id, name, str(type), permission_overwrites=perms)
+        data = yield from self.http.create_channel(server.id, name, str(type), permission_overwrites=perms,
+                                                   parent_id=parent_id)
         channel = Channel(server=server, **data)
         return channel
 
