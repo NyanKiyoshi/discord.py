@@ -116,6 +116,9 @@ class Member(User):
         self.server = kwargs.get('server', None)
         self.nick = kwargs.get('nick', None)
 
+        for role in self.roles:
+            role.members.add(self)
+
     def _update_voice_state(self, **kwargs):
         self.voice.self_mute = kwargs.get('self_mute', False)
         self.voice.self_deaf = kwargs.get('self_deaf', False)

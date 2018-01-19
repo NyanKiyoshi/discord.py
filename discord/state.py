@@ -473,6 +473,9 @@ class ConnectionState:
             for role in server.roles:
                 if role.id in data['roles']:
                     member.roles.append(role)
+                    role.members.add(member)
+                elif member in role.members:
+                    role.members.remove(member)
 
             # sort the roles by ID since they can be "randomised"
             member.roles.sort()

@@ -79,11 +79,13 @@ class Role(Hashable):
     """
 
     __slots__ = ['id', 'name', 'permissions', 'color', 'colour', 'position',
-                 'managed', 'mentionable', 'hoist', 'server' ]
+                 'managed', 'mentionable', 'hoist', 'server', '_members' ]
 
     def __init__(self, **kwargs):
         self.server = kwargs.pop('server')
         self._update(**kwargs)
+
+        self._members = set()
 
     def __str__(self):
         return self.name
@@ -143,3 +145,7 @@ class Role(Hashable):
     def mention(self):
         """Returns a string that allows you to mention a role."""
         return '<@&{}>'.format(self.id)
+
+    @property
+    def members(self):
+        return self._members
