@@ -565,6 +565,12 @@ class Webhook:
 
         return self._adapter.edit_webhook(**payload)
 
+    @staticmethod
+    def embed_to_dict(embed):
+        if type(embed) is dict:
+            return embed
+        return embed.to_dict()
+
     def send(self, content=None, *, wait=False, username=None, avatar_url=None,
                                     tts=False, file=None, embed=None, embeds=None):
         """|maybecoro|
@@ -634,10 +640,10 @@ class Webhook:
         if embeds is not None:
             if len(embeds) > 10:
                 raise InvalidArgument('embeds has a maximum of 10 elements.')
-            payload['embeds'] = [e.to_dict() for e in embeds]
+            payload['embeds'] = [self.embed_to_dict(e) for e in embeds]
 
         if embed is not None:
-            payload['embeds'] = [embed.to_dict()]
+            payload['embeds'] = [self.embed_to_dict(embed)]
 
         if content is not None:
             payload['content'] = str(content)
